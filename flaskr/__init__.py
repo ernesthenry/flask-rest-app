@@ -1,4 +1,4 @@
-from flask import Flask, jsonify,request
+from flask import Flask, jsonify,request, abort
 from .models import setup_db, Plant
 from flask_cors import CORS
 
@@ -17,7 +17,7 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-Methods', 'GET,PATCH,POST,DELETE,OPTIONS')
         return response
         
-    @app.route('/plants')
+    @app.route('/plants', methods=['GET'])
     # @cross_origin() # route specific
     def get_plants():
         page=request.args.get('page',1 ,type=int)
@@ -32,12 +32,17 @@ def create_app(test_config=None):
             'total_plants':len(formatted_plants)
         })
 
-    def hello():
-        return jsonify({ 'message': 'Hello world'})
-
-    @app.route('/smiley')
-    def smiley():
-        return ":)"
+            
+    @app.route('/plants/<int:plant_id>')
+    def get_specific_plant(plant_id):
+        plant = Plant.query.filter(Plant.id == plant_id).one_or_none()
+        if plant is None:
+            abort(404)
+        else:
+            return jsonify({
+                'success': True,
+                'plant': plant.format()
+            })
 
 
     return app
