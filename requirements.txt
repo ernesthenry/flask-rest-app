@@ -7,7 +7,7 @@ colorama==0.4.3
 distlib==0.3.0
 Django==3.0.5
 django-filter==2.2.0
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 filelock==3.0.12
 Flask==1.1.2
 Flask-Cors==3.0.8
